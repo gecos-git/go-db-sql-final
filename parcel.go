@@ -71,6 +71,10 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 		res = append(res, p)
 	}
 
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return res, nil
 }
 
@@ -98,9 +102,9 @@ func (s ParcelStore) SetAddress(number int, address string) error {
 		_, err = s.db.Exec("UPDATE parcel SET address = :address WHERE number = :number",
 			sql.Named("address", address),
 			sql.Named("number", number))
-	}
-	if err != nil {
-		return err
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
